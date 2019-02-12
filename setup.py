@@ -9,29 +9,30 @@
 import os
 from setuptools import setup
 
+
 # Utility function to read the README- and VERSION-files.
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 setup(
-    name = "mox_stsorgsync",
-    version = read("VERSION").strip(),
-    author = "Jørgen Gårdsted Jørgensen",
-    author_email = "jgj@magenta-aps.dk",
-    description = ("mox agent for synchronizing stsorgsaync with updates from os2mo"),
-    license = "MPL",
-    keywords = "sts stsorgsync os2mo lora",
-    url = "", 
+    name="mox_stsorgsync",
+    version=read("VERSION").strip(),
+    author="Jørgen Gårdsted Jørgensen",
+    author_email="jgj@magenta-aps.dk",
+    description=("mox agent for synchronizing stsorgsync from os2mo"),
+    license="MPL",
+    keywords="sts stsorgsync os2mo lora",
+    url="",
     packages=['mox_stsorgsync'],
     long_description=read('README.md').strip(),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: MPL License",
-    ],  
+    ],
     install_requires=[
         # see requirements.txt
         # https://caremad.io/posts/2013/07/setup-vs-requirement/
-    ]   
+    ]
 )
-

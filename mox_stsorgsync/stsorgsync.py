@@ -51,10 +51,13 @@ def stsorgsync_post(url, **params):
         logger.exception(url)
         raise
 
+
 def upsert_user(user):
     logger.info("upsert user %s", user["Uuid"])
     stsorgsync_post("{BASE}/user", json=user)
 
+
 def upsert_org_unit(org_unit):
     logger.info("upsert org_unit %s", org_unit["Uuid"])
     stsorgsync_post("{BASE}/orgunit", json=org_unit)
+

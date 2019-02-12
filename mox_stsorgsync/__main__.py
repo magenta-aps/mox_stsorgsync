@@ -1,4 +1,4 @@
-""# -- coding: utf-8 --
+# -- coding: utf-8 --
 #
 # Copyright (c) 2018, Magenta ApS
 #
@@ -6,12 +6,10 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import argparse
-import datetime
 import logging
 from mox_stsorgsync import os2mo, stsorgsync, config
 
-settings=config.settings
+settings = config.settings
 
 # set warning-level for all loggers
 [
@@ -29,7 +27,6 @@ def upsert_stsorgsync_orgunits():
     os2mo_uuids = os2mo.org_unit_uuids()
     for i in os2mo_uuids:
         sts_org_unit = os2mo.get_sts_orgunit(i)
-        errs = []
         # check for required attributes
         # stsorgsync.upsert_org_unit(sts_user)
 
@@ -51,7 +48,7 @@ def upsert_stsorgsync_users():
             continue
         stsorgsync.upsert_user(sts_user)
 
+
 if __name__ == "__main__":
     upsert_stsorgsync_orgunits()
     #upsert_stsorgsync_users()
-

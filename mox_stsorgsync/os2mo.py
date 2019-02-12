@@ -47,14 +47,14 @@ def user_uuids():
     return [e["uuid"] for e in os2mo_get("{BASE}/o/{ORG}/e").json()["items"]]
 
 
-def addresses_to_user(user,addresses):
+def addresses_to_user(user, addresses):
     for a in addresses:
         if a['address_type']['scope'] == "EMAIL":
-            user["Email"]= { "Value": a["name"], "Uuid": a["uuid"] }
+            user["Email"] = {"Value": a["name"], "Uuid": a["uuid"]}
         if a['address_type']['scope'] == "PHONE":
-            user["Phone"]= { "Value": a["name"], "Uuid": a["uuid"] }
+            user["Phone"] = {"Value": a["name"], "Uuid": a["uuid"]}
         if a['address_type']['scope'] == "DAR":
-            user["Location"]= { "Value": a["name"], "Uuid": a["uuid"] }
+            user["Location"] = {"Value": a["name"], "Uuid": a["uuid"]}
 
 
 def engagements_to_user(user, engagements):
@@ -69,23 +69,20 @@ def engagements_to_user(user, engagements):
 def get_sts_user(uuid):
     base = os2mo_get("{BASE}/e/" + uuid + "/").json()
     sts_user = {
-      "Uuid": uuid, 
+      "Uuid": uuid,
       "UserId": uuid,
-      # "Phone":{},, Can be there
-      # !"Email": {}, Must be there
-      # !"Location": {}, Must be there
-      "Positions": [ ],  # ! must have len > 0
+      "Positions": [],
       "Person": {
         "Name": base["name"],
         "Uuid": uuid,
       }
     }
     addresses_to_user(
-        sts_user, 
+        sts_user,
         os2mo_get("{BASE}/e/" + uuid + "/details/address").json()
     )
     engagements_to_user(
-        sts_user, 
+        sts_user,
         os2mo_get("{BASE}/e/" + uuid + "/details/engagement").json()
     )
     return sts_user
@@ -94,22 +91,21 @@ def get_sts_user(uuid):
 def org_unit_uuids():
     return [e["uuid"] for e in os2mo_get("{BASE}/o/{ORG}/ou").json()["items"]]
 
+
 def itsystems_to_orgunit(orgunit, itsystems):
     for i in itsystems:
         orgunit["ItSystemUuids"].append(i["itsystem"]["uuid"])
 
+
 def addresses_to_orgunit(orgunit, addresses):
     for a in addresses:
         if a['address_type']['scope'] == "EMAIL":
-            orgunit["Email"]= { "Value": a["name"], "Uuid": a["uuid"] }
+            orgunit["Email"] = {"Value": a["name"], "Uuid": a["uuid"]}
         elif a['address_type']['scope'] == "PHONE":
-            orgunit["Phone"]= { "Value": a["name"], "Uuid": a["uuid"] }
+            orgunit["Phone"] = {"Value": a["name"], "Uuid": a["uuid"]}
         elif a['address_type']['scope'] == "DAR":
-            orgunit["Post"]= { "Value": a["value"], "Uuid": a["uuid"] }
-            orgunit["Location"]= { "Value": a["name"], "Uuid": a["uuid"] }
-        #else:
-        #    import pdb; pdb.set_trace()
-
+            orgunit["Post"] = {"Value": a["value"], "Uuid": a["uuid"]}
+            orgunit["Location"] = {"Value": a["name"], "Uuid": a["uuid"]}
 
 
 def get_sts_orgunit(uuid):
@@ -117,7 +113,7 @@ def get_sts_orgunit(uuid):
     sts_org_unit = {
         'Contact': {'ShortKey': None, 'Uuid': None, 'Value': None},
         'ContactOpenHours': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'ContactPlaces': [{'OrgUnitUuid': None, 'Tasks': []}], # uuids in tasks
+        'ContactPlaces': [{'OrgUnitUuid': None, 'Tasks': []}],
         'Ean': {'ShortKey': None, 'Uuid': None, 'Value': None},
         'Email': {'ShortKey': None, 'Uuid': None, 'Value': None},
         'EmailRemarks': {'ShortKey': None, 'Uuid': None, 'Value': None},
@@ -138,13 +134,12 @@ def get_sts_orgunit(uuid):
         sts_org_unit["ParentOrgUnitUuid"] = base["parent"]["uuid"]
 
     itsystems_to_orgunit(
-        sts_org_unit, 
+        sts_org_unit,
         os2mo_get("{BASE}/ou/" + uuid + "/details/it").json()
     )
     addresses_to_orgunit(
-        sts_org_unit, 
+        sts_org_unit,
         os2mo_get("{BASE}/ou/" + uuid + "/details/address").json()
     )
 
     import pprint; pprint.pprint(sts_org_unit)
-
