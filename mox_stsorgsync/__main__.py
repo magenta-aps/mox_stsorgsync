@@ -9,6 +9,7 @@
 import logging
 from mox_stsorgsync import os2mo, stsorgsync, config
 
+
 settings = config.settings
 
 # set warning-level for all loggers
@@ -19,36 +20,43 @@ settings = config.settings
 
 logging.basicConfig(level=int(settings["MOX_LOG_LEVEL"]),
                     filename=settings["MOX_LOG_FILE"])
-
 logger = logging.getLogger("mox_stsorgsync")
+logger.setLevel(int(settings["MOX_LOG_LEVEL"]))
 
 
-def upsert_stsorgsync_orgunits():
-    os2mo_uuids = os2mo.org_unit_uuids()
+def sync_stsorgsync_orgunits():
+    os2mo_uuids = set(os2mo.org_unit_uuids())
+    stsorgsync_uuids = set(stsorgsync.orgunit_uuids())
+
+    # delete from stsorgsync what is not in os2mo
+    if len(os2mo_uuids):
+        for uuid in set(stsorgsync_uuids - os2mo_uuids):
+            stsorgsync.delete_orgunit(uuid)
+
     for i in os2mo_uuids:
-        sts_org_unit = os2mo.get_sts_orgunit(i)
-        # check for required attributes
-        # stsorgsync.upsert_org_unit(sts_user)
+        sts_orgunit = os2mo.get_sts_orgunit(i)
+        stsorgsync.upsert_orgunit(sts_orgunit)
 
 
-def upsert_stsorgsync_users():
-    os2mo_uuids = os2mo.user_uuids()
+def sync_stsorgsync_users():
+    stsorgsync_uuids = set(stsorgsync.user_uuids())
+    os2mo_uuids = set(os2mo.user_uuids())
+
+    # delete from stsorgsync what is not in os2mo
+    if len(os2mo_uuids):
+        for uuid in set(stsorgsync_uuids - os2mo_uuids):
+            stsorgsync.delete_user(uuid)
+
+    # insert/overwrite all users from  os2mo
     for i in os2mo_uuids:
         sts_user = os2mo.get_sts_user(i)
-        errs = []
-        # check for required attributes
-        if not len(sts_user["Positions"]):
-            errs.append("No positions")
-        if not sts_user.get("Location"):
-            errs.append("No Location")
-        if not sts_user.get("Email"):
-            errs.append("No Email")
-        if len(errs):
-            logger.warning("Skipping user: %s because %r", i, errs)
-            continue
         stsorgsync.upsert_user(sts_user)
 
 
 if __name__ == "__main__":
-    upsert_stsorgsync_orgunits()
-    #upsert_stsorgsync_users()
+    if not settings["OS2MO_ORG_UUID"]:
+        settings["OS2MO_ORG_UUID"] = os2mo.os2mo_get(
+            "{BASE}/o/"
+        ).json()[0]["uuid"]
+    sync_stsorgsync_orgunits()
+    sync_stsorgsync_users()

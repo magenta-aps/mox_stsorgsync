@@ -10,6 +10,7 @@ import requests
 import logging
 from mox_stsorgsync.config import settings
 
+
 logger = logging.getLogger("mox_stsorgsync")
 
 
@@ -37,6 +38,21 @@ def stsorgsync_get(url, **params):
         raise
 
 
+def stsorgsync_delete(url, **params):
+    url = stsorgsync_url(url)
+    try:
+        r = requests.delete(
+            url,
+            **params,
+            verify=settings["STSORGSYNC_CA_BUNDLE"],
+        )
+        r.raise_for_status()
+        return r
+    except Exception:
+        logger.exception(url)
+        raise
+
+
 def stsorgsync_post(url, **params):
     url = stsorgsync_url(url)
     try:
@@ -52,12 +68,29 @@ def stsorgsync_post(url, **params):
         raise
 
 
+def user_uuids():
+    return stsorgsync_get("{BASE}/user").json()
+
+
+def delete_user(uuid):
+    logger.info("delete user %s", uuid)
+    stsorgsync_delete("{BASE}/user", params={"uuid": uuid})
+
+
 def upsert_user(user):
     logger.info("upsert user %s", user["Uuid"])
     stsorgsync_post("{BASE}/user", json=user)
 
 
-def upsert_org_unit(org_unit):
-    logger.info("upsert org_unit %s", org_unit["Uuid"])
-    stsorgsync_post("{BASE}/orgunit", json=org_unit)
+def orgunit_uuids():
+    return stsorgsync_get("{BASE}/orgunit").json()
 
+
+def delete_orgunit(uuid):
+    logger.info("delete orgunit %s", uuid)
+    stsorgsync_delete("{BASE}/orgunit", params={"uuid": uuid})
+
+
+def upsert_orgunit(org_unit):
+    logger.info("upsert orgunit %s", org_unit["Uuid"])
+    stsorgsync_post("{BASE}/orgunit", json=org_unit)

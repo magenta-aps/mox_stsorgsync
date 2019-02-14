@@ -8,6 +8,7 @@
 
 import requests
 import logging
+
 from mox_stsorgsync.config import settings
 
 
@@ -85,6 +86,7 @@ def get_sts_user(uuid):
         sts_user,
         os2mo_get("{BASE}/e/" + uuid + "/details/engagement").json()
     )
+    # show_all_details(uuid,"e")
     return sts_user
 
 
@@ -101,32 +103,21 @@ def addresses_to_orgunit(orgunit, addresses):
     for a in addresses:
         if a['address_type']['scope'] == "EMAIL":
             orgunit["Email"] = {"Value": a["name"], "Uuid": a["uuid"]}
+        elif a['address_type']['scope'] == "PNUMBER":
+            orgunit["Ean"] = {"Value": a["name"], "Uuid": a["uuid"]}
         elif a['address_type']['scope'] == "PHONE":
             orgunit["Phone"] = {"Value": a["name"], "Uuid": a["uuid"]}
         elif a['address_type']['scope'] == "DAR":
             orgunit["Post"] = {"Value": a["value"], "Uuid": a["uuid"]}
+        elif a['address_type']['scope'] == "TEXT":
             orgunit["Location"] = {"Value": a["name"], "Uuid": a["uuid"]}
 
 
 def get_sts_orgunit(uuid):
     base = os2mo_get("{BASE}/ou/" + uuid + "/").json()
     sts_org_unit = {
-        'Contact': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'ContactOpenHours': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'ContactPlaces': [{'OrgUnitUuid': None, 'Tasks': []}],
-        'Ean': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'Email': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'EmailRemarks': {'ShortKey': None, 'Uuid': None, 'Value': None},
         'ItSystemUuids': [],
-        'LOSShortName': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'Location': {'ShortKey': None, 'Uuid': None, 'Value': None},
         'Name': base["name"],
-        'ParentOrgUnitUuid': None,  # most should have
-        'PayoutUnitUuid': None,
-        'Phone': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'PhoneOpenHours': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'Post': {'ShortKey': None, 'Uuid': None, 'Value': None},
-        'PostReturn': {'ShortKey': None, 'Uuid': None, 'Value': None},
         'Uuid': uuid,
     }
 
@@ -142,4 +133,19 @@ def get_sts_orgunit(uuid):
         os2mo_get("{BASE}/ou/" + uuid + "/details/address").json()
     )
 
-    import pprint; pprint.pprint(sts_org_unit)
+    # show_all_details(uuid,"ou")
+    return sts_org_unit
+
+
+def show_all_details(uuid, objtyp):
+    import pprint
+    print(" ---- details ----\n")
+    for d, has_detail in os2mo_get(
+            "{BASE}/" + objtyp + "/" + uuid + "/details"
+    ).json().items():
+        if has_detail:
+            print("------------ detail ---- " + d)
+            pprint.pprint(os2mo_get(
+                "{BASE}/" + objtyp + "/" + uuid + "/details/" + d
+             ).json())
+    print(" ---- end of details ----\n")

@@ -17,6 +17,13 @@ else:
 config = configparser.ConfigParser(defaults={
     "MOX_LOG_LEVEL": "10",
     "MOX_LOG_FILE": "",  # "" sends log to console
+    "OS2MO_SERVICE_URL": "http://some-os2mo-url/service",
+    "OS2MO_SAML_TOKEN": "token-from-saml-slash-api-token",
+    "OS2MO_ORG_UUID": "",  # "" and mox will get it
+    "OS2MO_CA_BUNDLE": "",  # "" = do not check ssl-host-certs
+    "STSORGSYNC_API_URL": "http://some-stsorgsync-url/api/v1_1",
+    "STSORGSYNC_CA_BUNDLE": ""  # "" = do not check ssl-host-certs
+
 })
 config["settings"] = {}
 
@@ -24,4 +31,3 @@ if inifile:
     config.read(str(inifile))
 
 settings = config["settings"]
-
