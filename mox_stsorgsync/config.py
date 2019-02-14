@@ -16,18 +16,28 @@ else:
 
 config = configparser.ConfigParser(defaults={
     "MOX_LOG_LEVEL": "10",
-    "MOX_LOG_FILE": "",  # "" sends log to console
+    "MOX_LOG_FILE": "",
     "OS2MO_SERVICE_URL": "http://some-os2mo-url/service",
     "OS2MO_SAML_TOKEN": "token-from-saml-slash-api-token",
-    "OS2MO_ORG_UUID": "",  # "" and mox will get it
-    "OS2MO_CA_BUNDLE": "",  # "" = do not check ssl-host-certs
+    "OS2MO_ORG_UUID": "",
+    "OS2MO_CA_BUNDLE": "true",
     "STSORGSYNC_API_URL": "http://some-stsorgsync-url/api/v1_1",
-    "STSORGSYNC_CA_BUNDLE": ""  # "" = do not check ssl-host-certs
-
+    "STSORGSYNC_CA_BUNDLE": "true"
 })
+
 config["settings"] = {}
 
 if inifile:
     config.read(str(inifile))
 
-settings = config["settings"]
+settings = {k.upper(): v for k, v in dict(config["settings"]).items()}
+
+if settings["STSORGSYNC_CA_BUNDLE"].lower() in ["false", ""]:
+    settings["STSORGSYNC_CA_BUNDLE"] = False
+elif settings["STSORGSYNC_CA_BUNDLE"].lower() in ["true"]:
+    settings["STSORGSYNC_CA_BUNDLE"] = True
+
+if settings["OS2MO_CA_BUNDLE"].lower() in ["false", ""]:
+    settings["OS2MO_CA_BUNDLE"] = False
+elif settings["OS2MO_CA_BUNDLE"].lower() in ["true"]:
+    settings["OS2MO_CA_BUNDLE"] = True
