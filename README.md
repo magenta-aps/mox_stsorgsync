@@ -40,13 +40,13 @@ The configuration file has the following settings
     
     ; os2mo ca bundle - 'true' means use the built in ca-bundle, 'false' means dont use any
     ; otherwise it is interpreted as a filename where the ca certs are
-    "OS2MO_CA_BUNDLE": "true",
+    OS2MO_CA_BUNDLE = true
 
     ; stsorgsync api url - this is the url to the stsorgsync instance - it will typically end with '/api/v1_1' or similar 
-    "STSORGSYNC_API_URL": "http://some-stsorgsync-url/api/v1_1",
+    STSORGSYNC_API_URL = http://some-stsorgsync-url/api/v1_1
 
     ; stsorgsync ca bundle - 'true' means use the built in ca-bundle, 'false' means dont use any
     ; otherwise it is interpreted as a filename where the ca certs are
-    "STSORGSYNC_CA_BUNDLE": "true"
+    STSORGSYNC_CA_BUNDLE = true
 
 
