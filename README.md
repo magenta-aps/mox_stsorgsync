@@ -21,7 +21,7 @@ The configuration of this module is quite simple and is done using a configurati
 
 The configuration file has the following settings
 
-    {settings]
+    [settings]
 
     ; log level set this to a numeric representation of a log level - 10 is debug
     MOX_LOG_LEVEL = 10 
