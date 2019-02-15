@@ -45,7 +45,7 @@ The configuration looks like this:
     ; stsorgsync api url - this is the url to the stsorgsync instance - it will typically end with '/api/v1_1' or similar 
     STSORGSYNC_API_URL = http://some-stsorgsync-url/api/v1_1
 
-    ; stsorgsync ca bundle - 'true' means use the built in ca-bundle, 'false' ior blank means dont use any
+    ; stsorgsync ca bundle - 'true' means use the built in ca-bundle, 'false' or blank means dont use any
     ; otherwise it is interpreted as a filename pointing to the ca certs.
     STSORGSYNC_CA_BUNDLE = true
 
