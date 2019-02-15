@@ -19,27 +19,27 @@ The configuration of this module is quite simple and is done using a configurati
 * location is 'settings.ini' next to the file 'config.py'
 
 
-The configuration file has the following settings
+The configuration looks like this:
 
     [settings]
 
-    ; log level set this to a numeric representation of a log level - 10 is debug
+    ; log level set this to a numeric representation of a log level - 10 is debug.
     MOX_LOG_LEVEL = 10 
 
-    ; log file - set this to blank to have log in stderr, otherwise this must be a file name 
+    ; log file - set this to blank to have log in stderr, otherwise this must be a file name. 
     MOX_LOG_FILE =
 
-    ; os2mo-service url - this is the full url to os2mo-service - it must end in '/service'
+    ; os2mo-service url - this is the full url to os2mo-service - it must end in '/service'.
     OS2MO_SERVICE_URL = 
 
-    ; os2mo saml token - if You are running an authenticated OS2MO, You must use this access token
+    ; os2mo saml token - if You are running an authenticated OS2MO, You must use this access token.
     OS2MO_SAML_TOKEN =
 
-    ; os2mo org uuid - leave it blank to query it from server 
+    ; os2mo org uuid - leave it blank to query it from server. 
     OS2MO_ORG_UUID = 
     
     ; os2mo ca bundle - 'true' means use the built in ca-bundle, 'false' or blank means dont use any
-    ; otherwise it is interpreted as a filenamei pointing to the ca certs
+    ; otherwise it is interpreted as a filename pointing to the ca certs.
     OS2MO_CA_BUNDLE = true
 
     ; stsorgsync api url - this is the url to the stsorgsync instance - it will typically end with '/api/v1_1' or similar 
