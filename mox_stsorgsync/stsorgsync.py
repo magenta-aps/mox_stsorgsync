@@ -15,6 +15,7 @@ logger = logging.getLogger("mox_stsorgsync")
 
 session = requests.Session()
 session.verify = settings["STSORGSYNC_CA_BUNDLE"]
+session.headers = {"User-Agent": "mox_stsorgsync/0.1"}
 
 
 def stsorgsync_url(url):

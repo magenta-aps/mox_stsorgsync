@@ -18,6 +18,7 @@ session = requests.Session()
 session.verify = settings["OS2MO_CA_BUNDLE"]
 session.headers = {
     "SESSION": settings["OS2MO_SAML_TOKEN"],
+    "User-Agent": "mox_stsorgsync/0.1",
 }
 
 
