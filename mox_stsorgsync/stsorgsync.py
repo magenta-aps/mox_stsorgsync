@@ -17,9 +17,7 @@ logger = logging.getLogger("mox_stsorgsync")
 def stsorgsync_url(url):
     """format url like {BASE}/user
     """
-    url = url.format(
-        BASE=settings["STSORGSYNC_API_URL"],
-    )
+    url = url.format(BASE=settings["STSORGSYNC_API_URL"])
     return url
 
 
@@ -27,9 +25,7 @@ def stsorgsync_get(url, **params):
     url = stsorgsync_url(url)
     try:
         r = requests.get(
-            url,
-            params=params,
-            verify=settings["STSORGSYNC_CA_BUNDLE"],
+            url, params=params, verify=settings["STSORGSYNC_CA_BUNDLE"]
         )
         r.raise_for_status()
         return r
@@ -42,9 +38,7 @@ def stsorgsync_delete(url, **params):
     url = stsorgsync_url(url)
     try:
         r = requests.delete(
-            url,
-            **params,
-            verify=settings["STSORGSYNC_CA_BUNDLE"],
+            url, **params, verify=settings["STSORGSYNC_CA_BUNDLE"]
         )
         r.raise_for_status()
         return r
@@ -57,9 +51,7 @@ def stsorgsync_post(url, **params):
     url = stsorgsync_url(url)
     try:
         r = requests.post(
-            url,
-            **params,
-            verify=settings["STSORGSYNC_CA_BUNDLE"],
+            url, **params, verify=settings["STSORGSYNC_CA_BUNDLE"]
         )
         r.raise_for_status()
         return r

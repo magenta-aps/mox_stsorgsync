@@ -24,8 +24,8 @@ setup(
     license="MPL",
     keywords="sts stsorgsync os2mo lora",
     url="",
-    packages=['mox_stsorgsync'],
-    long_description=read('README.md').strip(),
+    packages=["mox_stsorgsync"],
+    long_description=read("README.md").strip(),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
@@ -34,5 +34,5 @@ setup(
     install_requires=[
         # see requirements.txt
         # https://caremad.io/posts/2013/07/setup-vs-requirement/
-    ]
+    ],
 )

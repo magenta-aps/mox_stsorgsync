@@ -18,8 +18,9 @@ settings = config.settings
     for i in logging.root.manager.loggerDict
 ]
 
-logging.basicConfig(level=int(settings["MOX_LOG_LEVEL"]),
-                    filename=settings["MOX_LOG_FILE"])
+logging.basicConfig(
+    level=int(settings["MOX_LOG_LEVEL"]), filename=settings["MOX_LOG_FILE"]
+)
 logger = logging.getLogger("mox_stsorgsync")
 logger.setLevel(int(settings["MOX_LOG_LEVEL"]))
 
@@ -55,8 +56,8 @@ def sync_stsorgsync_users():
 
 if __name__ == "__main__":
     if not settings["OS2MO_ORG_UUID"]:
-        settings["OS2MO_ORG_UUID"] = os2mo.os2mo_get(
-            "{BASE}/o/"
-        ).json()[0]["uuid"]
+        settings["OS2MO_ORG_UUID"] = os2mo.os2mo_get("{BASE}/o/").json()[0][
+            "uuid"
+        ]
     sync_stsorgsync_orgunits()
     sync_stsorgsync_users()
