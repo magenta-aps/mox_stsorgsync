@@ -16,9 +16,9 @@ basedir = pathlib.Path(__file__).parent
 
 setup(
     name="mox_stsorgsync",
-    author="Jørgen Gårdsted Jørgensen",
-    author_email="jgj@magenta-aps.dk",
     version=(basedir / "VERSION").read_text().strip(),
+    author="Magenta ApS",
+    author_email="info@magenta.dk",
     description=("mox agent for synchronizing stsorgsync from os2mo"),
     license="MPL",
     keywords="sts stsorgsync os2mo lora",
