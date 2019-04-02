@@ -13,7 +13,12 @@ from mox_stsorgsync.config import settings
 
 
 logger = logging.getLogger("mox_stsorgsync")
-os2mo_headers = {"SESSION": settings["OS2MO_SAML_TOKEN"]}
+
+session = requests.Session()
+session.verify = settings["OS2MO_CA_BUNDLE"]
+session.headers = {
+    "SESSION": settings["OS2MO_SAML_TOKEN"],
+}
 
 
 def os2mo_url(url):
@@ -28,12 +33,7 @@ def os2mo_url(url):
 def os2mo_get(url, **params):
     url = os2mo_url(url)
     try:
-        r = requests.get(
-            url,
-            headers=os2mo_headers,
-            params=params,
-            verify=settings["OS2MO_CA_BUNDLE"],
-        )
+        r = session.get(url, params=params)
         r.raise_for_status()
         return r
     except Exception:
