@@ -6,26 +6,25 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import os
+import pathlib
+
 from setuptools import setup
 
 
-# Utility function to read the README- and VERSION-files.
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+basedir = pathlib.Path(__file__).parent
 
 
 setup(
     name="mox_stsorgsync",
-    version=read("VERSION").strip(),
     author="Jørgen Gårdsted Jørgensen",
     author_email="jgj@magenta-aps.dk",
+    version=(basedir / "VERSION").read_text().strip(),
     description=("mox agent for synchronizing stsorgsync from os2mo"),
     license="MPL",
     keywords="sts stsorgsync os2mo lora",
     url="",
     packages=["mox_stsorgsync"],
-    long_description=read("README.md").strip(),
+    long_description=(basedir / "README.md").read_text().strip(),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
