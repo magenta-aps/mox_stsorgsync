@@ -13,24 +13,22 @@ from mox_stsorgsync.config import settings
 
 logger = logging.getLogger("mox_stsorgsync")
 
+session = requests.Session()
+session.verify = settings["STSORGSYNC_CA_BUNDLE"]
+session.headers = {"User-Agent": "mox_stsorgsync/0.1"}
+
 
 def stsorgsync_url(url):
     """format url like {BASE}/user
     """
-    url = url.format(
-        BASE=settings["STSORGSYNC_API_URL"],
-    )
+    url = url.format(BASE=settings["STSORGSYNC_API_URL"])
     return url
 
 
 def stsorgsync_get(url, **params):
     url = stsorgsync_url(url)
     try:
-        r = requests.get(
-            url,
-            params=params,
-            verify=settings["STSORGSYNC_CA_BUNDLE"],
-        )
+        r = session.get(url, params=params)
         r.raise_for_status()
         return r
     except Exception:
@@ -41,11 +39,7 @@ def stsorgsync_get(url, **params):
 def stsorgsync_delete(url, **params):
     url = stsorgsync_url(url)
     try:
-        r = requests.delete(
-            url,
-            **params,
-            verify=settings["STSORGSYNC_CA_BUNDLE"],
-        )
+        r = session.delete(url, **params)
         r.raise_for_status()
         return r
     except Exception:
@@ -56,11 +50,7 @@ def stsorgsync_delete(url, **params):
 def stsorgsync_post(url, **params):
     url = stsorgsync_url(url)
     try:
-        r = requests.post(
-            url,
-            **params,
-            verify=settings["STSORGSYNC_CA_BUNDLE"],
-        )
+        r = session.post(url, **params)
         r.raise_for_status()
         return r
     except Exception:
