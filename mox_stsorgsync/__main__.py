@@ -19,7 +19,9 @@ settings = config.settings
 ]
 
 logging.basicConfig(
-    level=int(settings["MOX_LOG_LEVEL"]), filename=settings["MOX_LOG_FILE"]
+    format='%(levelname)s %(asctime)s %(name)s %(message)s',
+    level=int(settings["MOX_LOG_LEVEL"]),
+    filename=settings["MOX_LOG_FILE"]
 )
 logger = logging.getLogger("mox_stsorgsync")
 logger.setLevel(int(settings["MOX_LOG_LEVEL"]))
@@ -48,9 +50,16 @@ def sync_stsorgsync_users():
         for uuid in set(stsorgsync_uuids - os2mo_uuids):
             stsorgsync.delete_user(uuid)
 
-    # insert/overwrite all users from  os2mo
+    # insert/overwrite all users from os2mo
+    # delete if user has no more positions
     for i in os2mo_uuids:
         sts_user = os2mo.get_sts_user(i)
+
+        if not sts_user["Positions"]:
+            if i in stsorgsync_uuids:
+                stsorgsync.delete_user(i)
+            continue
+
         stsorgsync.upsert_user(sts_user)
 
 
