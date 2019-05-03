@@ -60,7 +60,7 @@ A typical logfile (with loglevel 20) should look somethat like this:
     INFO 2019-05-03 12:01:21,973 mox_stsorgsync upsert orgunit aa0d5012-4320-4715-bb74-f087befefaa8
     ...
     INFO 2019-05-03 12:01:23,181 mox_stsorgsync upsert orgunit cf8cfc65-f6a6-4ca8-9812-f50322cc0ec9
-    INFO 2019-05-03 12:01:23,182 mox_stsorgsync sync_stsorgsync_orgunits done
+    INFO 2019-05-03 12:01:44,706 mox_stsorgsync sync_stsorgsync_orgunits done
     INFO 2019-05-03 12:02:44,706 mox_stsorgsync sync_stsorgsync_users starting
     INFO 2019-05-03 12:02:44,706 mox_stsorgsync sync_stsorgsync_users getting list of users from stsorgsync
     INFO 2019-05-03 12:02:45,484 mox_stsorgsync sync_stsorgsync_users getting list of users from os2mo
