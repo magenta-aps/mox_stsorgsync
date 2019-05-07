@@ -71,7 +71,7 @@ def user_uuids():
 
 def delete_user(uuid):
     logger.info("delete user %s", uuid)
-    stsorgsync_delete("{BASE}/user", params={"uuid": uuid})
+    stsorgsync_delete("{BASE}/user/" +uuid)
 
 
 def upsert_user(user):
@@ -85,7 +85,6 @@ def orgunit_uuids():
 
 def delete_orgunit(uuid):
     logger.info("delete orgunit %s", uuid)
-    # stsorgsync_delete("{BASE}/orgunit", params={"uuid": uuid})
     stsorgsync_delete("{BASE}/orgunit/" + uuid)
 
 

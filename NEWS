@@ -1,3 +1,7 @@
+Release 0.1.4  May 7, 2019
+
+   Mended error when deleting users
+
 Release 0.1.3  May 7, 2019
 
    Changed API for docker-version of stsorgsync
