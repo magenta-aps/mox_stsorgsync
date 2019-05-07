@@ -27,6 +27,8 @@ MANIFEST
 
 # settings file
 settings.ini
+settings.local
+settings.docker
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
