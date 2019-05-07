@@ -49,6 +49,12 @@ The configuration looks like this:
     ; otherwise it is interpreted as a filename pointing to the ca certs.
     STSORGSYNC_CA_BUNDLE = true
 
+    ; stsorgsync municipality this is the cvr(vat) number of the municipality
+    ; this is an 8 digit number dfound on virk.dk
+    STSORGSYNC_MUNICIPALITY = 21212121
+
+
+
 A typical logfile (with loglevel 20) should look somethat like this:
 
     INFO 2019-05-03 12:01:19,485 mox_stsorgsync mox_stsorgsync starting
