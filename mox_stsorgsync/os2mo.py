@@ -8,18 +8,37 @@
 
 import requests
 import logging
-
 from mox_stsorgsync.config import settings
 
 
 logger = logging.getLogger("mox_stsorgsync")
-
 session = requests.Session()
 session.verify = settings["OS2MO_CA_BUNDLE"]
 session.headers = {
     "SESSION": settings["OS2MO_SAML_TOKEN"],
     "User-Agent": "mox_stsorgsync/0.1",
 }
+TRUNCATE_LENGTH = max(36, int(settings.get("STSORGSYNC_TRUNCATE", 200)))
+
+
+# truncate and warn all strings in dictionary,
+# ensure not shortening uuids
+def strip_truncate_and_warn(d, root, length=TRUNCATE_LENGTH):
+    for k, v in list(d.items()):
+        if isinstance(v, dict):
+            strip_truncate_and_warn(v, root)
+        elif isinstance(v, str):
+            v = d[k] = v.strip()
+            if len(v) > length:
+                v = d[k] = v[:length]
+                logger.warning(
+                    "truncating to %d key '%s' for"
+                    " uuid '%s' to value '%s'",
+                    length,
+                    k,
+                    root["Uuid"],
+                    v
+                )
 
 
 def os2mo_url(url):
@@ -82,6 +101,7 @@ def get_sts_user(uuid):
         sts_user, os2mo_get("{BASE}/e/" + uuid + "/details/engagement").json()
     )
     # show_all_details(uuid,"e")
+    strip_truncate_and_warn(sts_user, sts_user)
     return sts_user
 
 
@@ -124,6 +144,7 @@ def get_sts_orgunit(uuid):
     )
 
     # show_all_details(uuid,"ou")
+    strip_truncate_and_warn(sts_org_unit, sts_org_unit)
     return sts_org_unit
 
 

@@ -18,7 +18,7 @@ session.verify = settings["STSORGSYNC_CA_BUNDLE"]
 
 session.headers = {
     "User-Agent": "mox_stsorgsync/0.1",
-    "CVR":settings["STSORGSYNC_MUNICIPALITY"]
+    "CVR": settings["STSORGSYNC_MUNICIPALITY"]
 }
 
 
@@ -47,6 +47,10 @@ def stsorgsync_delete(url, **params):
         r = session.delete(url, **params)
         r.raise_for_status()
         return r
+    except requests.HTTPError as e:
+        if e.response.status_code == 404:
+            logger.warning("delete %r %r :404", url, params)
+            return r
     except Exception:
         logger.error(url + " " + r.text)
         logger.exception("")
@@ -71,7 +75,7 @@ def user_uuids():
 
 def delete_user(uuid):
     logger.info("delete user %s", uuid)
-    stsorgsync_delete("{BASE}/user/" +uuid)
+    stsorgsync_delete("{BASE}/user/" + uuid)
 
 
 def upsert_user(user):
