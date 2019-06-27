@@ -1,3 +1,7 @@
+Release 0.1.6  June 27, 2019
+
+   only accept units and employees from admin subtree (uuid parameter)
+
 Release 0.1.5  May 9, 2019
 
    strip strings, truncate and warn if longer than 200
