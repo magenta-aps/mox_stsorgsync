@@ -62,7 +62,10 @@ def os2mo_get(url, **params):
 
 
 def user_uuids():
-    return [e["uuid"] for e in os2mo_get("{BASE}/o/{ORG}/e").json()["items"]]
+    return [
+        e["uuid"]
+        for e in os2mo_get("{BASE}/o/{ORG}/e/", limit=100000).json()["items"]
+    ]
 
 
 def addresses_to_user(user, addresses):
@@ -75,18 +78,19 @@ def addresses_to_user(user, addresses):
             user["Location"] = {"Value": a["name"], "Uuid": a["uuid"]}
 
 
-def engagements_to_user(user, engagements):
+def engagements_to_user(user, engagements, allowed_unitids):
     for e in engagements:
-        user["Positions"].append(
-            {
-                "OrgUnitUuid": e["org_unit"]["uuid"],
-                "Name": e["job_function"]["name"],
-                "Uuid": e["uuid"],
-            }
-        )
+        if e["org_unit"]["uuid"] in allowed_unitids:
+            user["Positions"].append(
+                {
+                    "OrgUnitUuid": e["org_unit"]["uuid"],
+                    "Name": e["job_function"]["name"],
+                    "Uuid": e["uuid"],
+                }
+            )
 
 
-def get_sts_user(uuid):
+def get_sts_user(uuid, allowed_unitids):
     base = os2mo_get("{BASE}/e/" + uuid + "/").json()
     sts_user = {
         "Uuid": uuid,
@@ -98,7 +102,9 @@ def get_sts_user(uuid):
         sts_user, os2mo_get("{BASE}/e/" + uuid + "/details/address").json()
     )
     engagements_to_user(
-        sts_user, os2mo_get("{BASE}/e/" + uuid + "/details/engagement").json()
+        sts_user,
+        os2mo_get("{BASE}/e/" + uuid + "/details/engagement").json(),
+        allowed_unitids
     )
     # show_all_details(uuid,"e")
     strip_truncate_and_warn(sts_user, sts_user)
@@ -106,7 +112,10 @@ def get_sts_user(uuid):
 
 
 def org_unit_uuids():
-    return [e["uuid"] for e in os2mo_get("{BASE}/o/{ORG}/ou").json()["items"]]
+    return [
+        ou["uuid"]
+        for ou in os2mo_get("{BASE}/o/{ORG}/ou", limit=100000).json()["items"]
+    ]
 
 
 def itsystems_to_orgunit(orgunit, itsystems):
@@ -129,7 +138,18 @@ def addresses_to_orgunit(orgunit, addresses):
 
 
 def get_sts_orgunit(uuid):
-    base = os2mo_get("{BASE}/ou/" + uuid + "/").json()
+    base = parent = os2mo_get("{BASE}/ou/" + uuid + "/").json()
+
+    if not parent["uuid"] == settings["OS2MO_TOP_UNIT_UUID"]:
+        while parent.get("parent"):
+            if parent["uuid"] == settings["OS2MO_TOP_UNIT_UUID"]:
+                break
+            parent = parent["parent"]
+
+    if not parent["uuid"] == settings["OS2MO_TOP_UNIT_UUID"]:
+        # not part of right tree
+        return None
+
     sts_org_unit = {"ItSystemUuids": [], "Name": base["name"], "Uuid": uuid}
 
     if base.get("parent") and "uuid" in base["parent"]:
