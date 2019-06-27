@@ -113,8 +113,8 @@ def get_sts_user(uuid, allowed_unitids):
 
 def org_unit_uuids():
     return [
-        e["uuid"]
-        for e in os2mo_get("{BASE}/o/{ORG}/ou", limit=100000).json()["items"]
+        ou["uuid"]
+        for ou in os2mo_get("{BASE}/o/{ORG}/ou", limit=100000).json()["items"]
     ]
 
 
