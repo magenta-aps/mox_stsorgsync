@@ -42,6 +42,9 @@ The configuration looks like this:
     ; otherwise it is interpreted as a filename pointing to the ca certs.
     OS2MO_CA_BUNDLE = true
 
+    ; os2mo top org unit of administrative tree 
+    OS2MO_TOP_UNIT_UUID = decc5c18-98a7-11e9-98aa-00163e3c4928
+
     ; stsorgsync api url - this is the url to the stsorgsync instance - it will typically end with '/api/v1_1' or similar 
     STSORGSYNC_API_URL = http://some-stsorgsync-url/api/v1_1
 

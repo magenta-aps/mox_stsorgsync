@@ -29,33 +29,43 @@ logger.setLevel(int(settings["MOX_LOG_LEVEL"]))
 
 def sync_stsorgsync_orgunits():
     logger.info("sync_stsorgsync_orgunits starting")
-    logger.info("sync_stsorgsync_orgunits getting all organisational units from os2mo")
-
+    logger.info("sync_stsorgsync_orgunits getting "
+                "all organisational units from os2mo")
     os2mo_uuids = set(os2mo.org_unit_uuids())
 
-    logger.info("sync_stsorgsync_orgunits getting all organisational units from stsorgsync")
+    logger.info("sync_stsorgsync_orgunits getting all "
+                "organisational units from stsorgsync")
 
     stsorgsync_uuids = set(stsorgsync.orgunit_uuids())
 
     # delete from stsorgsync what is not in os2mo
 
-    logger.info("sync_stsorgsync_orgunits deleting organisational units from stsorgsync if deleted in os2mo")
+    logger.info("sync_stsorgsync_orgunits deleting organisational "
+                "units from stsorgsync if deleted in os2mo")
 
     if len(os2mo_uuids):
         for uuid in set(stsorgsync_uuids - os2mo_uuids):
             stsorgsync.delete_orgunit(uuid)
 
-    logger.info("sync_stsorgsync_orgunits upserting organisational units in stsorgsync")
+    logger.info("sync_stsorgsync_orgunits upserting "
+                "organisational units in stsorgsync")
 
+    allowed_unitids = []
     for i in os2mo_uuids:
         sts_orgunit = os2mo.get_sts_orgunit(i)
-        stsorgsync.upsert_orgunit(sts_orgunit)
+        if sts_orgunit:
+            allowed_unitids.append(i)
+            stsorgsync.upsert_orgunit(sts_orgunit)
 
     logger.info("sync_stsorgsync_orgunits done")
 
-def sync_stsorgsync_users():
+    return set(allowed_unitids)
+
+
+def sync_stsorgsync_users(allowed_unitids):
     logger.info("sync_stsorgsync_users starting")
-    logger.info("sync_stsorgsync_users getting list of users from stsorgsync")
+    logger.info("sync_stsorgsync_users getting list "
+                "of users from stsorgsync")
 
     stsorgsync_uuids = set(stsorgsync.user_uuids())
 
@@ -63,7 +73,8 @@ def sync_stsorgsync_users():
 
     os2mo_uuids = set(os2mo.user_uuids())
 
-    logger.info("sync_stsorgsync_users deleting os2mo-deleted users in stsorgsync")
+    logger.info("sync_stsorgsync_users deleting "
+                "os2mo-deleted users in stsorgsync")
 
     if len(os2mo_uuids):
         for uuid in set(stsorgsync_uuids - os2mo_uuids):
@@ -74,7 +85,7 @@ def sync_stsorgsync_users():
     logger.info("sync_stsorgsync_users upserting stsorgsync users")
 
     for i in os2mo_uuids:
-        sts_user = os2mo.get_sts_user(i)
+        sts_user = os2mo.get_sts_user(i, allowed_unitids)
 
         if not sts_user["Positions"]:
             if i in stsorgsync_uuids:
@@ -92,6 +103,6 @@ if __name__ == "__main__":
         settings["OS2MO_ORG_UUID"] = os2mo.os2mo_get("{BASE}/o/").json()[0][
             "uuid"
         ]
-    sync_stsorgsync_orgunits()
-    sync_stsorgsync_users()
+    orgunit_uuids = sync_stsorgsync_orgunits()
+    sync_stsorgsync_users(orgunit_uuids)
     logger.info("mox_stsorgsync done")
