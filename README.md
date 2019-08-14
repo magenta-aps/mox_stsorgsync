@@ -56,6 +56,10 @@ The configuration looks like this:
     ; this is an 8 digit number dfound on virk.dk
     STSORGSYNC_MUNICIPALITY = 21212121
 
+    ; IMPORTANT
+    ; Due to a limitation of the current service component,
+    ; certain name values must not exceed the length of 64 chars.
+    stsorgsync_truncate = 64
 
 
 A typical logfile (with loglevel 20) should look somethat like this:
