@@ -60,25 +60,49 @@ The configuration looks like this:
 
 A typical logfile (with loglevel 20) should look somethat like this:
 
-    INFO 2019-05-03 12:01:19,485 mox_stsorgsync mox_stsorgsync starting
-    INFO 2019-05-03 12:01:19,567 mox_stsorgsync sync_stsorgsync_orgunits starting
-    INFO 2019-05-03 12:01:19,567 mox_stsorgsync sync_stsorgsync_orgunits getting all organisational units from os2mo
-    INFO 2019-05-03 12:01:20,245 mox_stsorgsync sync_stsorgsync_orgunits getting all organisational units from stsorgsync
-    INFO 2019-05-03 12:01:20,683 mox_stsorgsync sync_stsorgsync_orgunits deleting organisational units from stsorgsync if deleted in os2mo
-    INFO 2019-05-03 12:01:20,683 mox_stsorgsync sync_stsorgsync_orgunits upserting organisational units in stsorgsync
-    INFO 2019-05-03 12:01:21,973 mox_stsorgsync upsert orgunit aa0d5012-4320-4715-bb74-f087befefaa8
+    INFO 2019-09-02 10:55:51,043 mox_stsorgsync mox_stsorgsync starting
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync -----------------------------------------
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync program configuration:
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     MOX_LOG_FILE='/tmp/logfile'
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     MOX_LOG_LEVEL='0'
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     OS2MO_CA_BUNDLE=True
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     OS2MO_ORG_UUID=''
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     OS2MO_SERVICE_URL='http://localhost:4000/service'
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     OS2MO_TOP_UNIT_UUID='f06ee470-9f17-566f-acbe-e938112d46d9'
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     STSORGSYNC_API_URL='http://localhost:3000'
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     STSORGSYNC_CA_BUNDLE=True
+    WARNING 2019-09-02 10:55:51,043 mox_stsorgsync     STSORGSYNC_MUNICIPALITY='21212121'
+    INFO 2019-09-02 10:55:51,116 mox_stsorgsync sync_stsorgsync_orgunits starting
+    INFO 2019-09-02 10:55:51,116 mox_stsorgsync sync_stsorgsync_orgunits getting all organisational units from os2mo
+    INFO 2019-09-02 10:55:51,722 mox_stsorgsync sync_stsorgsync_orgunits getting all organisational units from stsorgsync
+    INFO 2019-09-02 10:55:51,725 mox_stsorgsync sync_stsorgsync_orgunits deleting organisational units from stsorgsync if deleted in os2mo
+    INFO 2019-09-02 10:55:51,725 mox_stsorgsync sync_stsorgsync_orgunits upserting organisational units in stsorgsync
     ...
-    INFO 2019-05-03 12:01:23,181 mox_stsorgsync upsert orgunit cf8cfc65-f6a6-4ca8-9812-f50322cc0ec9
-    INFO 2019-05-03 12:01:44,706 mox_stsorgsync sync_stsorgsync_orgunits done
-    INFO 2019-05-03 12:02:44,706 mox_stsorgsync sync_stsorgsync_users starting
-    INFO 2019-05-03 12:02:44,706 mox_stsorgsync sync_stsorgsync_users getting list of users from stsorgsync
-    INFO 2019-05-03 12:02:45,484 mox_stsorgsync sync_stsorgsync_users getting list of users from os2mo
-    INFO 2019-05-03 12:02:47,362 mox_stsorgsync sync_stsorgsync_users deleting os2mo-deleted users in stsorgsync
-    INFO 2019-05-03 12:02:47,362 mox_stsorgsync sync_stsorgsync_users upserting stsorgsync users
-    INFO 2019-05-03 12:02:48,024 mox_stsorgsync upsert user a1bc5918-a19b-4798-8788-ca43a97cd707
+    INFO 2019-09-02 10:56:17,560 mox_stsorgsync sync_stsorgsync_orgunits done
+    INFO 2019-09-02 10:56:17,560 mox_stsorgsync sync_stsorgsync_users starting
+    INFO 2019-09-02 10:56:17,560 mox_stsorgsync sync_stsorgsync_users getting list of users from stsorgsync
+    INFO 2019-09-02 10:56:17,563 mox_stsorgsync sync_stsorgsync_users getting list of users from os2mo
+    INFO 2019-09-02 10:56:19,228 mox_stsorgsync sync_stsorgsync_users deleting os2mo-deleted users in stsorgsync
+    INFO 2019-09-02 10:56:19,228 mox_stsorgsync sync_stsorgsync_users upserting stsorgsync users
     ...
-    INFO 2019-05-03 12:05:50,208 mox_stsorgsync upsert user f28b1d87-12b7-4555-a667-614a773ccc0f
-    INFO 2019-05-03 12:05:50,284 mox_stsorgsync sync_stsorgsync_users done
-    INFO 2019-05-03 12:05:50,284 mox_stsorgsync mox_stsorgsync done
-
-
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync sync_stsorgsync_users done
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync -----------------------------------------
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync program counters:
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync     Medarbejdere fundet i OS2MO=270
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync     Medarbejdere fundet i OS2Sync=0
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync     Medarbejdere overført til OS2SYNC=230
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync     Orgenheder fundet i OS2MO=73
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync     Orgenheder fundet i OS2Sync=0
+    INFO 2019-09-02 12:06:56,656 mox_stsorgsync     Orgenheder som opdateres i OS2Sync=54
+    WARNING 2019-09-02 12:06:56,656 mox_stsorgsync -----------------------------------------
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync program configuration:
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     MOX_LOG_FILE='/tmp/logfile'
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     MOX_LOG_LEVEL='0'
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     OS2MO_CA_BUNDLE=True
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     OS2MO_ORG_UUID='1f76c88c-2a40-41db-968b-bfbbcc1ae762'
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     OS2MO_SERVICE_URL='http://localhost:4000/service'
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     OS2MO_TOP_UNIT_UUID='c8755b84-8cc9-483b-83cf-dfb1babd2419'
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     STSORGSYNC_API_URL='http://localhost:3000'
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     STSORGSYNC_CA_BUNDLE=True
+    WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     STSORGSYNC_MUNICIPALITY='21212121'
+    INFO 2019-09-02 12:06:56,657 mox_stsorgsync mox_stsorgsync done

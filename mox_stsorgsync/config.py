@@ -46,3 +46,5 @@ if settings["OS2MO_CA_BUNDLE"].lower() in ["false", ""]:
     settings["OS2MO_CA_BUNDLE"] = False
 elif settings["OS2MO_CA_BUNDLE"].lower() in ["true"]:
     settings["OS2MO_CA_BUNDLE"] = True
+
+loggername = "mox_stsorgsync"

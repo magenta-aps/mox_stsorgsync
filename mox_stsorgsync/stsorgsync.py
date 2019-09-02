@@ -8,14 +8,13 @@
 
 import requests
 import logging
-from mox_stsorgsync.config import settings
+from mox_stsorgsync import config
 
 
-logger = logging.getLogger("mox_stsorgsync")
-
+settings = config.settings
+logger = logging.getLogger(config.loggername)
 session = requests.Session()
 session.verify = settings["STSORGSYNC_CA_BUNDLE"]
-
 session.headers = {
     "User-Agent": "mox_stsorgsync/0.1",
     "CVR": settings["STSORGSYNC_MUNICIPALITY"]
