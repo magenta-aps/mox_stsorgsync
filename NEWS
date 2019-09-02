@@ -1,3 +1,7 @@
+Release 0.1.7  Sept 02, 2019
+
+   log configuration on start and end of program run
+
 Release 0.1.6  June 27, 2019
 
    only accept units and employees from admin subtree (uuid parameter)
