@@ -10,6 +10,9 @@ This small module exports OS2MO Employees and Organizational units along with se
 Apart from the configuration for this module, which is rather small, care must be taken to follow the steps outlined in the installation manual for StsOrgSync, 
 the current version being [this](https://github.com/Gentofte/STSOrgSync/raw/master/Documentation/Installation%20Guide.docx)
 
+A docker image of the service component is available on the following public repository (docker hub),
+Docker image: https://hub.docker.com/r/os2sync/linux
+
 The most important step is to get access to Production and Test-instances of STS-Organization on serviceplatformen.
 
 The configuration of this module is quite simple and is done using a configuration file which is found like this:
@@ -56,6 +59,10 @@ The configuration looks like this:
     ; this is an 8 digit number dfound on virk.dk
     STSORGSYNC_MUNICIPALITY = 21212121
 
+    ; IMPORTANT
+    ; Due to a limitation of the current service component,
+    ; certain name values must not exceed the length of 64 chars.
+    stsorgsync_truncate = 64
 
 
 A typical logfile (with loglevel 20) should look somethat like this:
