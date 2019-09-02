@@ -12,9 +12,9 @@ import collections
 
 # set warning-level for all loggers
 [
-    logging.getLogger(i).setLevel(logging.WARNING)
-    for i in logging.root.manager.loggerDict
-    if i != config.loggername
+    logging.getLogger(name).setLevel(logging.WARNING)
+    for name in logging.root.manager.loggerDict
+    if name != config.loggername
 ]
 
 settings = config.settings
