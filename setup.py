@@ -23,7 +23,7 @@ setup(
     license="MPL",
     keywords="sts stsorgsync os2mo lora",
     url="",
-    packages=["mox_stsorgsync"],
+    packages=["mox_stsorgsync", "os2sync_log_printer"],
     long_description=(basedir / "README.md").read_text().strip(),
     classifiers=[
         "Development Status :: 3 - Alpha",
