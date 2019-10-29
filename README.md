@@ -114,6 +114,15 @@ A typical logfile (with loglevel 20) should look somethat like this:
     WARNING 2019-09-02 12:06:56,657 mox_stsorgsync     STSORGSYNC_MUNICIPALITY='21212121'
     INFO 2019-09-02 12:06:56,657 mox_stsorgsync mox_stsorgsync done
 
+## Command line arguments
+
+Some clients want to start by uploading a pruned tree to STS Organisation. This is possible by adding the uuids of these
+departments on the commandline as arguments following **--cherrypick**
+   
+
+     --cherrypick CHERRYPICK [CHERRYPICK ...]
+                  add cherrypicked ou uuids one by one
+
 
 ## Os2sync log printer
 
