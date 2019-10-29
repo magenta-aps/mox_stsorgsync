@@ -113,6 +113,19 @@ def get_sts_user(uuid, allowed_unitids):
     return sts_user
 
 
+def pruned_tree(uuids=[]):
+    retval = list(uuids)
+    for uuid in uuids:
+        parent = os2mo_get("{BASE}/ou/" + uuid + "/").json()
+        if not parent["uuid"] == settings["OS2MO_TOP_UNIT_UUID"]:
+            while parent.get("parent"):
+                if parent["uuid"] == settings["OS2MO_TOP_UNIT_UUID"]:
+                    break
+                retval.append(parent["uuid"])
+                parent = parent["parent"]
+    return retval
+
+
 def org_unit_uuids():
     return [
         ou["uuid"]
