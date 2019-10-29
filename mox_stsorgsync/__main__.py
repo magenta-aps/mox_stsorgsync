@@ -9,6 +9,7 @@
 import logging
 from mox_stsorgsync import os2mo, stsorgsync, config
 import collections
+import argparse
 
 # set warning-level for all loggers
 [
@@ -49,28 +50,36 @@ def log_mox_counters(counter):
         logger.info("    %s: %r", k, v)
 
 
-def sync_stsorgsync_orgunits(counter):
+def sync_stsorgsync_orgunits(counter, cherrypicked=[]):
     logger.info("sync_stsorgsync_orgunits starting")
-    logger.info("sync_stsorgsync_orgunits getting "
-                "all organisational units from os2mo")
-    os2mo_uuids = set(os2mo.org_unit_uuids())
+
+    if cherrypicked:
+        logger.info("sync_stsorgsync_orgunits getting "
+                    "cherrypicked organisational units from os2mo")
+        os2mo_uuids = set(os2mo.pruned_tree(cherrypicked))
+    else:
+        logger.info("sync_stsorgsync_orgunits getting "
+                    "all organisational units from os2mo")
+        os2mo_uuids = set(os2mo.org_unit_uuids())
+
     counter["Orgenheder fundet i OS2MO"] = len(os2mo_uuids)
 
     logger.info("sync_stsorgsync_orgunits getting all "
                 "organisational units from stsorgsync")
 
-    stsorgsync_uuids = set(stsorgsync.orgunit_uuids())
-    counter["Orgenheder fundet i OS2Sync"] = len(stsorgsync_uuids)
+    if cherrypicked:
+        logger.info("No deletion of organisational units attempted in "
+                    "os2sync when cherrypicking")
+    else:
+        stsorgsync_uuids = set(stsorgsync.orgunit_uuids())
+        counter["Orgenheder fundet i OS2Sync"] = len(stsorgsync_uuids)
 
-    # delete from stsorgsync what is not in os2mo
-
-    logger.info("sync_stsorgsync_orgunits deleting organisational "
-                "units from stsorgsync if deleted in os2mo")
-
-    if len(os2mo_uuids):
-        for uuid in set(stsorgsync_uuids - os2mo_uuids):
-            counter["Orgenheder som slettes i OS2Sync"] += 1
-            stsorgsync.delete_orgunit(uuid)
+        logger.info("sync_stsorgsync_orgunits deleting organisational "
+                    "units from stsorgsync if deleted in os2mo")
+        if len(os2mo_uuids):
+            for uuid in set(stsorgsync_uuids - os2mo_uuids):
+                counter["Orgenheder som slettes i OS2Sync"] += 1
+                stsorgsync.delete_orgunit(uuid)
 
     logger.info("sync_stsorgsync_orgunits upserting "
                 "organisational units in stsorgsync")
@@ -129,6 +138,11 @@ def sync_stsorgsync_users(allowed_unitids, counter):
 
 
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='Mox Stsorgsync')
+    parser.add_argument('--cherrypick', dest='cherrypick', action='append',
+                        nargs='+', help='add cherrypicked ou uuids one by one')
+    args = vars(parser.parse_args())
     counter = collections.Counter()
     logger.info("mox_stsorgsync starting")
     log_mox_config()
@@ -136,7 +150,11 @@ if __name__ == "__main__":
         settings["OS2MO_ORG_UUID"] = os2mo.os2mo_get("{BASE}/o/").json()[0][
             "uuid"
         ]
-    orgunit_uuids = sync_stsorgsync_orgunits(counter)
+    if args["cherrypick"]:
+        orgunit_uuids = sync_stsorgsync_orgunits(counter,
+                                                 args["cherrypick"][0])
+    else:
+        orgunit_uuids = sync_stsorgsync_orgunits(counter)
     sync_stsorgsync_users(orgunit_uuids, counter)
     log_mox_counters(counter)
     log_mox_config()
