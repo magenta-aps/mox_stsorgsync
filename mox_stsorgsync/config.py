@@ -27,6 +27,9 @@ config = configparser.ConfigParser(
         "OS2MO_CA_BUNDLE": "true",
         "STSORGSYNC_API_URL": "http://some-stsorgsync-url/api/v1_1",
         "STSORGSYNC_CA_BUNDLE": "true",
+        "STSORGSYNC_PHONE_SCOPE_CLASSES": "",
+        "STSORGSYNC_EMAIL_SCOPE_CLASSES": ""
+
     }
 )
 
@@ -36,6 +39,28 @@ if inifile:
     config.read(str(inifile))
 
 settings = {k.upper(): v for k, v in dict(config["settings"]).items()}
+
+# new settings that come directly crom crontab are in environment
+# "STSORGSYNC_PHONE_SCOPE_CLASSES" and "STSORGSYNC_EMAIL_SCOPE_CLASSES"
+# both are space-separated list of classuuids, most important first
+
+settings["STSORGSYNC_PHONE_SCOPE_CLASSES"] = [
+    c for c in os.environ.get(
+        "STSORGSYNC_PHONE_SCOPE_CLASSES",
+        settings["STSORGSYNC_PHONE_SCOPE_CLASSES"]
+    ).split(" ")
+    if c
+]
+
+settings["STSORGSYNC_EMAIL_SCOPE_CLASSES"] = [
+    c for c in os.environ.get(
+        "STSORGSYNC_EMAIL_SCOPE_CLASSES",
+        settings["STSORGSYNC_EMAIL_SCOPE_CLASSES"]
+
+        ).split(" ")
+    if c
+]
+
 
 if settings["STSORGSYNC_CA_BUNDLE"].lower() in ["false", ""]:
     settings["STSORGSYNC_CA_BUNDLE"] = False

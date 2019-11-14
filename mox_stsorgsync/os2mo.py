@@ -70,14 +70,57 @@ def user_uuids():
     ]
 
 
+def chose_visible_prioritized_address(candidates, prioritized_classes):
+    chosen = None
+    # find candidate using prioritized list if available
+    for cls in prioritized_classes:
+        if chosen:
+            break
+        for candidate in candidates:
+            if (
+                candidate["address_type"]["uuid"] == cls
+                and candidate.get("visibility",
+                                  {"scope": "PUBLIC"})["scope"] == "PUBLIC"
+            ):
+                chosen = {"Value": candidate["name"],
+                          "Uuid": candidate["uuid"]}
+
+    if not prioritized_classes and len(candidates):
+        for candidate in reversed(candidates):
+            if candidate.get("visibility",
+                             {"scope": "PUBLIC"})["scope"] == "PUBLIC":
+                chosen = {"Value": candidate["name"],
+                          "Uuid": candidate["uuid"]}
+                break
+
+    return chosen
+
+
 def addresses_to_user(user, addresses):
+    emails, phones = [], []
     for a in addresses:
         if a["address_type"]["scope"] == "EMAIL":
-            user["Email"] = {"Value": a["name"], "Uuid": a["uuid"]}
+            emails.append(a)
         if a["address_type"]["scope"] == "PHONE":
-            user["Phone"] = {"Value": a["name"], "Uuid": a["uuid"]}
+            phones.append(a)
         if a["address_type"]["scope"] == "DAR":
             user["Location"] = {"Value": a["name"], "Uuid": a["uuid"]}
+
+    # find phone using prioritized/empty list of address_type uuids
+    phone = chose_visible_prioritized_address(
+        phones,
+        settings["STSORGSYNC_PHONE_SCOPE_CLASSES"]
+    )
+    if phone:
+        user["Phone"] = phone
+
+    # find email using prioritized/empty list of address_type uuids
+    email = chose_visible_prioritized_address(
+        emails,
+        settings["STSORGSYNC_EMAIL_SCOPE_CLASSES"]
+    )
+    if email:
+        user["Email"] = email
 
 
 def engagements_to_user(user, engagements, allowed_unitids):

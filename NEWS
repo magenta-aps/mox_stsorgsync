@@ -1,3 +1,8 @@
+Release 0.1.10 Nov 14 2019
+
+   only public emails and phone numbers,
+   classes configurable through environment
+
 Release 0.1.9  Oct 29 2019
 
    command line argument --cherrypick added
