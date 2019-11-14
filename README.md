@@ -59,10 +59,12 @@ The configuration looks like this:
     ; this is an 8 digit number dfound on virk.dk
     STSORGSYNC_MUNICIPALITY = 21212121
 
-    ; IMPORTANT
-    ; Due to a limitation of the current service component,
-    ; certain name values must not exceed the length of 64 chars.
-    stsorgsync_truncate = 64
+    ; only public emails and phones are permitted to be transferred
+    ; furthermore phones ane emails can be controlled by space-separated lists of employee_address_type class uuids
+    ; these can also be controlled through environment as they are typically deducted later than installation
+    STSORGSYNC_PHONE_SCOPE_CLASSES  =
+    STSORGSYNC_EMAIL_SCOPE_CLASSES  =
+
 
 
 A typical logfile (with loglevel 20) should look somethat like this:
