@@ -151,8 +151,10 @@ if __name__ == "__main__":
             "uuid"
         ]
     if args["cherrypick"]:
-        orgunit_uuids = sync_stsorgsync_orgunits(counter,
-                                                 args["cherrypick"][0])
+        orgunit_uuids = sync_stsorgsync_orgunits(
+            counter,
+            args["cherrypick"][0] + [settings["OS2MO_TOP_UNIT_UUID"]]
+        )
     else:
         orgunit_uuids = sync_stsorgsync_orgunits(counter)
     sync_stsorgsync_users(orgunit_uuids, counter)
