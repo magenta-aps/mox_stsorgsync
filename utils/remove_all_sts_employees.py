@@ -7,11 +7,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import logging
-import sys
 import json
 from mox_stsorgsync import stsorgsync, config, __main__ as mox
 import collections
-import argparse
 import pathlib
 import time
 
@@ -33,7 +31,7 @@ logger.setLevel(int(settings["MOX_LOG_LEVEL"]))
 
 
 def delete_stsorgsync_users(donefile="./delete_stsorgsync_users.json"):
-    done={}
+    done = {}
     deljson = pathlib.Path(donefile)
     if deljson.exists():
         done.update(json.loads(deljson.read_text()))
@@ -50,8 +48,6 @@ def delete_stsorgsync_users(donefile="./delete_stsorgsync_users.json"):
             done[uuid] = True
         deljson.write_text(json.dumps(done))
         time.sleep(450)
-
-
 
 
 if __name__ == "__main__":
