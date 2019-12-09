@@ -133,3 +133,8 @@ A small module has been added to this package in order to facilitate log-forensi
     python -m os2sync_log_printer /var/log/os2sync/service.log
 
 It simply transforms the log, which is partly xml, into more human readble form
+
+## Utils
+
+helper scripts 
+
