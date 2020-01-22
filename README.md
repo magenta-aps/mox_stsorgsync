@@ -59,6 +59,9 @@ The configuration looks like this:
     ; this is an 8 digit number dfound on virk.dk
     STSORGSYNC_MUNICIPALITY = 21212121
 
+    ; A hash cache for ignoring information already transferred to os2sync
+    STSORGSYNC_HASH_CACHE = stsorgsync_hash_cache
+
     ; only public emails and phones are permitted to be transferred
     ; furthermore phones ane emails can be controlled by space-separated lists of employee_address_type class uuids
     ; these can also be controlled through environment as they are typically deducted later than installation
@@ -66,8 +69,21 @@ The configuration looks like this:
     STSORGSYNC_EMAIL_SCOPE_CLASSES  =
 
 
+OS2SYNC is not fast - it transfers less than one orgunit/user a second. Therefore mox\_stsorgsync has the ability to cache a hash of what has already been transferred
 
-A typical logfile (with loglevel 20) should look somethat like this:
+This is done by setting the value of STSORGSYNC\_HASH\_CACHE to a filename of Your own choice. By default it is 'stsorgsync\_hash\_cache' in current working directory 
+The file will hold a cache of the values/methods transferred and used in the transfer, so that a sequence of the same delete or post will be ignored apart from the first one and it looks like this:
+
+    {
+        "/user/029f17f1-736a-49df-b770-bddd61a2bf21": "bc90b31b7955eaf12b94a9b2bf153c7248a3da1687a1666cd70abff4",
+        "/user/09177a5a-794a-494b-9d19-fa82cdd4c5a0": "588e0c0d870674b1794c7375b7c8a4b65764a0976541a07638f73d8e",
+        "/orgunit/c336ebd6-3316-449a-abb3-70bbbb11806d": "0573caeb117bbff8c23846d1ed67f3884c56865326fe7662ab76f1d0",
+    }
+
+In the logfile an ignored transfer is marked by the suffix '- cached'.
+
+
+A typical logfile (with loglevel 20) should look somethat like this: 
 
     INFO 2019-09-02 10:55:51,043 mox_stsorgsync mox_stsorgsync starting
     WARNING 2019-09-02 10:55:51,043 mox_stsorgsync -----------------------------------------
@@ -124,6 +140,8 @@ departments on the commandline as arguments following **--cherrypick**
 
      --cherrypick CHERRYPICK [CHERRYPICK ...]
                   add cherrypicked ou uuids one by one
+
+Be advised that the transfer will delete all users in OS2SYNC if they are not in the cherrypicked departments
 
 
 ## Os2sync log printer

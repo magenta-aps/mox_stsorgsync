@@ -10,6 +10,8 @@ import logging
 from mox_stsorgsync import os2mo, stsorgsync, config
 import collections
 import argparse
+import pathlib
+import json
 
 # set warning-level for all loggers
 [
@@ -126,9 +128,8 @@ def sync_stsorgsync_users(allowed_unitids, counter):
         sts_user = os2mo.get_sts_user(i, allowed_unitids)
 
         if not sts_user["Positions"]:
-            if i in stsorgsync_uuids:
-                counter["Medarbejdere slettes i OS2Sync (pos)"] += 1
-                stsorgsync.delete_user(i)
+            counter["Medarbejdere slettes i OS2Sync (pos)"] += 1
+            stsorgsync.delete_user(i)
             continue
 
         stsorgsync.upsert_user(sts_user)
@@ -139,6 +140,7 @@ def sync_stsorgsync_users(allowed_unitids, counter):
 
 if __name__ == "__main__":
 
+    hash_cache_file = pathlib.Path(settings["STSORGSYNC_HASH_CACHE"])
     parser = argparse.ArgumentParser(description='Mox Stsorgsync')
     parser.add_argument('--cherrypick', dest='cherrypick', action='append',
                         nargs='+', help='add cherrypicked ou uuids one by one')
@@ -146,6 +148,10 @@ if __name__ == "__main__":
     counter = collections.Counter()
     logger.info("mox_stsorgsync starting")
     log_mox_config()
+
+    if hash_cache_file and hash_cache_file.exists():
+        stsorgsync.hash_cache.update(json.loads(hash_cache_file.read_text()))
+
     if not settings["OS2MO_ORG_UUID"]:
         settings["OS2MO_ORG_UUID"] = os2mo.os2mo_get("{BASE}/o/").json()[0][
             "uuid"
@@ -158,6 +164,10 @@ if __name__ == "__main__":
     else:
         orgunit_uuids = sync_stsorgsync_orgunits(counter)
     sync_stsorgsync_users(orgunit_uuids, counter)
+
+    if hash_cache_file:
+        hash_cache_file.write_text(json.dumps(stsorgsync.hash_cache, indent=4))
+
     log_mox_counters(counter)
     log_mox_config()
     logger.info("mox_stsorgsync done")

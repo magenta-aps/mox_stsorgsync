@@ -25,6 +25,7 @@ config = configparser.ConfigParser(
         "OS2MO_SAML_TOKEN": "token-from-saml-slash-api-token",
         "OS2MO_ORG_UUID": "",
         "OS2MO_CA_BUNDLE": "true",
+        "STSORGSYNC_HASH_CACHE": "stsorgsync_hash_cache",  # in CWD
         "STSORGSYNC_API_URL": "http://some-stsorgsync-url/api/v1_1",
         "STSORGSYNC_CA_BUNDLE": "true",
         "STSORGSYNC_PHONE_SCOPE_CLASSES": "",
