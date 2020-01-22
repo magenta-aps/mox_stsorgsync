@@ -9,16 +9,30 @@
 import requests
 import logging
 from mox_stsorgsync import config
+import hashlib
+import json
 
 
 settings = config.settings
 logger = logging.getLogger(config.loggername)
+hash_cache = {}
 session = requests.Session()
 session.verify = settings["STSORGSYNC_CA_BUNDLE"]
 session.headers = {
     "User-Agent": "mox_stsorgsync/0.1",
     "CVR": settings["STSORGSYNC_MUNICIPALITY"]
 }
+
+
+def already_xferred(url, params, method):
+    params_hash = hashlib.sha224(
+        (json.dumps(params, sort_keys=True) + method).encode("utf-8")
+    ).hexdigest()
+    if hash_cache.get(url) == params_hash:
+        return True
+    else:
+        hash_cache[url] = params_hash
+    return False
 
 
 def stsorgsync_url(url):
@@ -73,13 +87,19 @@ def user_uuids():
 
 
 def delete_user(uuid):
-    logger.info("delete user %s", uuid)
-    stsorgsync_delete("{BASE}/user/" + uuid)
+    if not already_xferred("/user/" + uuid, {}, "delete"):
+        logger.info("delete user %s", uuid)
+        stsorgsync_delete("{BASE}/user/" + uuid)
+    else:
+        logger.info("delete user %s - cached", uuid)
 
 
 def upsert_user(user):
-    logger.info("upsert user %s", user["Uuid"])
-    stsorgsync_post("{BASE}/user", json=user)
+    if not already_xferred("/user/" + user["Uuid"], user, "upsert"):
+        logger.info("upsert user %s", user["Uuid"])
+        stsorgsync_post("{BASE}/user", json=user)
+    else:
+        logger.info("upsert user %s - cached", user["Uuid"])
 
 
 def orgunit_uuids():
@@ -87,10 +107,16 @@ def orgunit_uuids():
 
 
 def delete_orgunit(uuid):
-    logger.info("delete orgunit %s", uuid)
-    stsorgsync_delete("{BASE}/orgunit/" + uuid)
+    if not already_xferred("/orgunit/" + uuid, {}, "delete"):
+        logger.info("delete orgunit %s", uuid)
+        stsorgsync_delete("{BASE}/orgunit/" + uuid)
+    else:
+        logger.info("delete orgunit %s - cached", uuid)
 
 
 def upsert_orgunit(org_unit):
-    logger.info("upsert orgunit %s", org_unit["Uuid"])
-    stsorgsync_post("{BASE}/orgunit/", json=org_unit)
+    if not already_xferred("/orgunit/" + org_unit["Uuid"], org_unit, "upsert"):
+        logger.info("upsert orgunit %s", org_unit["Uuid"])
+        stsorgsync_post("{BASE}/orgunit/", json=org_unit)
+    else:
+        logger.info("upsert orgunit %s - cached", org_unit["Uuid"])
